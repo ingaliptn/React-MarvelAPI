@@ -1,1 +1,1 @@
-# React-medium-fundamental-level
+# React App w/ MarvelAPI
