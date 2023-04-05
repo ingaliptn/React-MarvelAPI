@@ -6,10 +6,6 @@ import Spinner from "../spinner/Spinner";
 import ErrorMessage from "../errorMessage/ErrorMessage";
 
 class RandomChar extends Component {
-  constructor(props) {
-    super(props);
-    this.updateChar();
-  }
 
   state = {
     char: {},
@@ -17,6 +13,11 @@ class RandomChar extends Component {
     error: false,
   };
   marvelService = new MarvelService();
+
+  componentDidMount() {
+    this.updateChar();
+  }
+  componentWiilUnmount() {}
 
   onCharLoaded = (char) => {
     this.setState({ char, loading: false });
@@ -37,8 +38,8 @@ class RandomChar extends Component {
   render() {
     const { char, loading, error } = this.state;
     const errorMessage = error ? <ErrorMessage /> : null;
-    const spinner = loading ? <Spinner/> : null;
-    const content = !(loading || error) ?  <View char={char}/> : null
+    const spinner = loading ? <Spinner /> : null;
+    const content = !(loading || error) ? <View char={char} /> : null;
 
     return (
       <div className="randomchar">
