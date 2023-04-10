@@ -9,9 +9,11 @@ class CharList extends Component {
     charList: [],
     loading: true,
     error: false,
-    loadindOnButton: false,
+    newItemLoading: false,
     offset: 210,
+    charEnded: false,
   };
+
   marvelService = new MarvelService();
 
   componentDidMount() {
@@ -28,21 +30,30 @@ class CharList extends Component {
 
   onCharListLoading = () => {
     this.setState({
-      loadindOnButton: true,
+      newItemLoading: true,
     });
   };
 
-  onCharListLoaded = (offset, newCharList) => {
-    this.setState(({ charList }) => ({
-      charList: [...charList, newCharList],
+  onCharListLoaded = (newCharList) => {
+    let ended = false;
+    if (newCharList.length < 9) {
+      ended = true;
+    }
+
+    this.setState(({ offset, charList }) => ({
+      charList: [...charList, ...newCharList],
       loading: false,
-      loadindOnButton: false,
+      newItemLoading: false,
       offset: offset + 9,
+      charEnded: ended,
     }));
   };
 
   onError = () => {
-    this.setState({ loading: false, error: true });
+    this.setState({
+      error: true,
+      loading: false,
+    });
   };
 
   renderItems(arr) {
@@ -69,8 +80,11 @@ class CharList extends Component {
   }
 
   render() {
-    const { charList, loading, error, loadindOnButton, offset } = this.state;
+    const { charList, loading, error, offset, newItemLoading, charEnded } =
+      this.state;
+
     const items = this.renderItems(charList);
+
     const errorMessage = error ? <ErrorMessage /> : null;
     const spinner = loading ? <Spinner /> : null;
     const content = !(loading || error) ? items : null;
@@ -80,10 +94,10 @@ class CharList extends Component {
         {errorMessage}
         {spinner}
         {content}
-
         <button
           className="button button__main button__long"
-          disabled={loadindOnButton}
+          disabled={newItemLoading}
+          style={{ display: charEnded ? "none" : "block" }}
           onClick={() => this.onRequest(offset)}>
           <div className="inner">load more</div>
         </button>
