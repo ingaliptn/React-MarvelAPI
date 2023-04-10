@@ -77,11 +77,11 @@ const View = ({ char }) => {
   return (
     <>
       <div className="char__basics">
-        <img src={thumbnail} alt={name} style={imgStyle}/>
+        <img src={thumbnail} alt={name} style={imgStyle} />
         <div>
           <div className="char__info-name">{name}</div>
           <div className="char__btns">
-            <a href={homepage} className="button button__main" >
+            <a href={homepage} className="button button__main">
               <div className="inner">homepage</div>
             </a>
             <a href={wiki} className="button button__secondary">
