@@ -9,18 +9,36 @@ class CharList extends Component {
     charList: [],
     loading: true,
     error: false,
+    loadindOnButton: false,
+    offset: 210,
   };
   marvelService = new MarvelService();
 
   componentDidMount() {
-    this.marvelService
-      .getAllCharacters()
-      .then(this.onCharListLoaded)
-      .catch(this.onError);
+    this.onRequest();
   }
 
-  onCharListLoaded = (charList) => {
-    this.setState({ charList, loading: false });
+  onRequest = (offset) => {
+    this.onCharListLoading();
+    this.marvelService
+      .getAllCharacters(offset)
+      .then(this.onCharListLoaded)
+      .catch(this.onError);
+  };
+
+  onCharListLoading = () => {
+    this.setState({
+      loadindOnButton: true,
+    });
+  };
+
+  onCharListLoaded = (offset, newCharList) => {
+    this.setState(({ charList }) => ({
+      charList: [...charList, newCharList],
+      loading: false,
+      loadindOnButton: false,
+      offset: offset + 9,
+    }));
   };
 
   onError = () => {
@@ -36,8 +54,12 @@ class CharList extends Component {
       ) {
         imgStyle = { objectFit: "unset" };
       }
+
       return (
-        <li className="char__item" key={item.id} onClick={() => this.props.onCharSelected(item.id)}>
+        <li
+          className="char__item"
+          key={item.id}
+          onClick={() => this.props.onCharSelected(item.id)}>
           <img src={item.thumbnail} alt={item.name} style={imgStyle} />
           <div className="char__name">{item.name}</div>
         </li>
@@ -47,7 +69,7 @@ class CharList extends Component {
   }
 
   render() {
-    const { charList, loading, error } = this.state;
+    const { charList, loading, error, loadindOnButton, offset } = this.state;
     const items = this.renderItems(charList);
     const errorMessage = error ? <ErrorMessage /> : null;
     const spinner = loading ? <Spinner /> : null;
@@ -59,7 +81,10 @@ class CharList extends Component {
         {spinner}
         {content}
 
-        <button className="button button__main button__long">
+        <button
+          className="button button__main button__long"
+          disabled={loadindOnButton}
+          onClick={() => this.onRequest(offset)}>
           <div className="inner">load more</div>
         </button>
       </div>
