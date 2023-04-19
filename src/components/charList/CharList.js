@@ -1,9 +1,10 @@
-import "./charList.scss";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import useMarvelService from "../../services/MarvelService";
-import ErrorMessage from "../errorMessage/ErrorMessage";
+
 import Spinner from "../spinner/Spinner";
-import { useEffect, useRef, useState } from "react";
+import ErrorMessage from "../errorMessage/ErrorMessage";
+import useMarvelService from "../../services/MarvelService";
+import "./charList.scss";
 
 const CharList = (props) => {
   const [charList, setCharList] = useState([]);
@@ -18,7 +19,7 @@ const CharList = (props) => {
   }, []);
 
   const onRequest = (offset, initial) => {
-    initial ? setNewItemLoading(true) : setNewItemLoading(false);
+    initial ? setNewItemLoading(false) : setNewItemLoading(true);
     getAllCharacters(offset).then(onCharListLoaded);
   };
 
@@ -27,7 +28,6 @@ const CharList = (props) => {
     if (newCharList.length < 9) {
       ended = true;
     }
-
     setCharList((charList) => [...charList, ...newCharList]);
     setNewItemLoading((newItemLoading) => false);
     setOffset((offset) => offset + 9);
@@ -98,8 +98,9 @@ const CharList = (props) => {
     </div>
   );
 };
+
 CharList.propTypes = {
-  onCharSelected: PropTypes.func,
+  onCharSelected: PropTypes.func.isRequired,
 };
 
 export default CharList;
