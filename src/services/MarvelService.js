@@ -33,6 +33,20 @@ const useMarvelService = () => {
     return _transformComics(res.data.results[0]);
   };
 
+  const _transformCharacter = (char) => {
+    return {
+      id: char.id,
+      name: char.name,
+      description: char.description
+        ? `${char.description.slice(0, 210)}...`
+        : "There is no description for this character",
+      thumbnail: char.thumbnail.path + "." + char.thumbnail.extension,
+      homepage: char.urls[0].url,
+      wiki: char.urls[1].url,
+      comics: char.comics.items,
+    };
+  };
+
   const _transformComics = (comics) => {
     return {
       id: comics.id,
@@ -49,25 +63,12 @@ const useMarvelService = () => {
     };
   };
 
-  const _transformCharacter = (char) => {
-    return {
-      id: char.id,
-      name: char.name,
-      description: char.description
-        ? `${char.description.slice(0, 210)}...`
-        : "There is no description for this character",
-      thumbnail: char.thumbnail.path + "." + char.thumbnail.extension,
-      homepage: char.urls[0].url,
-      wiki: char.urls[1].url,
-      comics: char.comics.items,
-    };
-  };
   return {
     loading,
     error,
+    clearError,
     getAllCharacters,
     getCharacter,
-    clearError,
     getAllComics,
     getComics,
   };
