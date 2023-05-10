@@ -14,11 +14,13 @@ const SinglePage = ({ Component, dataType }) => {
 
   useEffect(() => {
     updateData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const updateData = () => {
     clearError();
 
+    // eslint-disable-next-line default-case
     switch (dataType) {
       case "comic":
         getComic(id).then(onDataLoaded);
